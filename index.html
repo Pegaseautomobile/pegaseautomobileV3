@@ -1,316 +1,287 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Découvrez les véhicules d’occasion de Pégase Automobile.">
-<title>Nos véhicules | Pégase Automobile</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-:root{--ink:#15232a;--muted:#718087;--cream:#f6f5f1;--green:#173b37;--gold:#c99a55;--line:#e6e8e4;--shadow:0 18px 50px #172d2810}
-*{box-sizing:border-box}
-body{margin:0;background:#fff;color:var(--ink);font-family:"DM Sans",sans-serif}
-button,input,select{font:inherit}
-a{color:inherit;text-decoration:none}
-.topbar{height:38px;background:var(--green);color:#e8efe9;font-size:12px;display:flex;align-items:center;justify-content:center}
-.topbar span{color:#d8b476;margin:0 8px}
-.header{height:82px;max-width:1240px;margin:auto;padding:0 28px;display:flex;align-items:center;justify-content:space-between}
-.brand{display:flex;align-items:center;gap:12px}
-.brandmark{width:40px;height:40px;border:1px solid var(--gold);border-radius:50%;display:grid;place-items:center;color:var(--gold);font:700 20px Manrope}
-.brandname{font:800 16px Manrope;letter-spacing:.14em}
-.brandname small{display:block;margin-top:4px;color:#74817d;font:600 9px "DM Sans";letter-spacing:.32em}
-.nav{display:flex;align-items:center;gap:34px;font-size:13px;font-weight:600}
-.nav a:hover{color:var(--gold)}
-.nav .contact{padding:12px 18px;border:1px solid var(--green)}
-.hero{background:var(--cream);overflow:hidden}
-.hero-inner{max-width:1240px;min-height:310px;margin:auto;padding:54px 28px 64px;display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:30px}
-.eyebrow{color:#ad8047;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase}
-.hero h1{max-width:550px;margin:16px 0 14px;font:600 clamp(32px,4vw,50px)/1.12 Manrope;letter-spacing:-.04em}
-.hero p{max-width:495px;margin:0;color:var(--muted);font-size:15px;line-height:1.7}
-.hero-art{height:220px;position:relative;display:grid;place-items:center}
-.hero-art:before{content:"";position:absolute;width:340px;height:190px;border-radius:50%;background:#e9e5db}
-.hero-art img{position:relative;width:min(100%,490px);height:230px;object-fit:cover;filter:drop-shadow(0 18px 12px #182d2b26)}
-.hero-note{position:absolute;right:8px;bottom:0;padding:15px 18px;background:white;box-shadow:var(--shadow);color:var(--muted);font-size:12px}
-.hero-note b{display:block;margin-bottom:3px;color:var(--green);font:700 16px Manrope}
-.container{max-width:1240px;margin:auto;padding:44px 28px 80px}
-.intro-row{display:flex;justify-content:space-between;align-items:end;margin-bottom:24px}
-.intro-row h2{margin:0 0 6px;font:700 27px Manrope;letter-spacing:-.03em}
-.intro-row p,.count{margin:0;color:var(--muted);font-size:13px}
-.layout{display:grid;grid-template-columns:250px 1fr;gap:30px}
-.filters{position:sticky;top:16px;height:max-content;padding:22px;border:1px solid var(--line);background:#fff}
-.filter-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;font:700 16px Manrope}
-.reset{border:0;background:none;color:#ad8047;font-size:12px;cursor:pointer}
-.field{margin-bottom:20px}
-.field label{display:block;margin-bottom:8px;font-size:12px;font-weight:700}
-.field input,.field select{width:100%;height:42px;padding:0 11px;border:1px solid var(--line);background:#fff;color:var(--ink)}
-.checkrow{display:flex;align-items:center;gap:9px;margin:12px 0;color:#58656a;font-size:13px}
-.checkrow input{accent-color:var(--green)}
-.apply{width:100%;height:46px;margin-top:4px;border:0;background:var(--green);color:#fff;font-weight:700;cursor:pointer}
-.results-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{padding:8px 11px;background:var(--cream);color:#4d5d5a;font-size:11px}
-.sort{height:38px;padding:0 10px;border:1px solid var(--line);background:#fff;font-size:12px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
-.card{min-width:0;border:1px solid var(--line);background:#fff;transition:.2s}
-.card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
-.photo{height:205px;position:relative;overflow:hidden;background:#f0f1ee}
-.photo img{width:100%;height:100%;object-fit:cover}
-.badge{position:absolute;top:12px;left:12px;padding:7px 9px;background:#fff;font-size:10px;font-weight:700}
-.heart{position:absolute;top:10px;right:12px;width:34px;height:34px;border:0;border-radius:50%;background:#ffffffdc;color:#52615e;font-size:18px;cursor:pointer}
-.heart.saved{color:#b15a4e}
-.cardbody{padding:17px 18px}
-.make{color:#a17b49;font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
-.card h3{margin:6px 0 12px;font:700 17px Manrope}
-.specs{display:flex;flex-wrap:wrap;gap:13px;padding-bottom:15px;border-bottom:1px solid var(--line);color:#748087;font-size:11px}
-.specs span:before{content:"·";margin-right:5px;color:var(--gold);font-weight:800}
-.price-row{display:flex;align-items:end;justify-content:space-between;padding-top:14px}
-.price{color:var(--green);font:800 21px Manrope}
-.price small{display:block;margin-top:3px;color:#85908f;font:400 10px "DM Sans"}
-.details{color:#49615a;font-size:11px;font-weight:700}
-.no-results{grid-column:1/-1;padding:60px 20px;border:1px dashed var(--line);color:var(--muted);text-align:center}
-.trust{padding:36px 28px;background:var(--green);color:#fff}
-.trust-inner{max-width:1184px;margin:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-.trust-item{display:flex;align-items:center;gap:14px}
-.trust-icon{color:#d6b477;font-size:21px}
-.trust-item b{display:block;font:700 13px Manrope}
-.trust-item small{display:block;margin-top:5px;color:#c5d2cb;font-size:11px}
-.footer{padding:38px 28px;background:#102d29;color:#cad5d0}
-.footer-inner{max-width:1184px;margin:auto;display:flex;align-items:center;justify-content:space-between;font-size:12px}
-.footer strong{color:#fff;font:700 13px Manrope}
-.footer a{color:#e0bd81}
-.mobile-filter{display:none}
-@media(max-width:850px){.nav{gap:16px}.hero-inner{grid-template-columns:1fr .8fr}.layout{grid-template-columns:220px 1fr;gap:18px}.photo{height:170px}}
-@media(max-width:650px){
-.topbar{font-size:10px}.header{height:68px;padding:0 18px}.nav a:not(.contact){display:none}.nav .contact{padding:10px 12px;font-size:11px}
-.brandname{font-size:13px}.hero-inner{display:block;padding:40px 22px 24px}.hero h1{font-size:36px}.hero-art{height:165px}.hero-art:before{width:260px;height:130px}.hero-art img{height:170px}
-.container{padding:32px 16px 54px}.intro-row{align-items:start;gap:12px}.intro-row h2{font-size:23px}.count{padding-top:6px;white-space:nowrap}
-.layout{display:block}.filters{display:none;position:static;margin-bottom:15px}.filters.open{display:block}
-.mobile-filter{width:100%;height:44px;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:0 13px;border:1px solid var(--line);background:#fff;font-size:12px;font-weight:700}
-.results-top{align-items:start;gap:10px}.chips{display:none}.sort{max-width:145px}.grid{gap:11px}.photo{height:125px}.badge{top:8px;left:8px;padding:6px 7px;font-size:9px}
-.heart{top:6px;right:7px;width:29px;height:29px}.cardbody{padding:12px}.card h3{margin:5px 0 9px;font-size:14px}.specs{gap:7px;padding-bottom:10px;font-size:9px}
-.price-row{padding-top:10px}.price{font-size:17px}.price small{font-size:9px}.details{font-size:10px}.trust-inner{grid-template-columns:1fr;gap:20px}.footer-inner{align-items:flex-start;flex-direction:column;gap:15px}
-}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nos véhicules | Pégase Automobile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--green:#173b37;--gold:#c99a55;--ink:#15232a;--muted:#718087;--cream:#f6f5f1;--line:#e6e8e4}
+    *{box-sizing:border-box}
+    body{margin:0;color:var(--ink);font-family:"DM Sans",sans-serif}
+    a{color:inherit;text-decoration:none}
+    button,input,select{font:inherit}
+    .top{padding:10px;text-align:center;background:var(--green);color:#fff;font-size:12px}
+    header{max-width:1200px;margin:auto;padding:20px;display:flex;justify-content:space-between;align-items:center}
+    .brand{font:800 17px Manrope;letter-spacing:.12em}.brand small{display:block;font:600 10px "DM Sans";letter-spacing:.25em}
+    nav{display:flex;gap:25px;font-size:13px;font-weight:600}
+    nav a:last-child{border:1px solid var(--green);padding:10px 14px}
+    .hero{background:var(--cream);padding:48px 20px}
+    .hero-inner{max-width:1160px;margin:auto;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:30px}
+    .eyebrow{color:#ad8047;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
+    h1{font:700 clamp(34px,5vw,52px)/1.1 Manrope;margin:14px 0}
+    .hero p{max-width:500px;color:var(--muted);line-height:1.7}
+    .hero img{width:100%;height:260px;object-fit:cover}
+    main{max-width:1200px;margin:auto;padding:42px 20px 70px}
+    .intro{display:flex;justify-content:space-between;align-items:end;margin-bottom:22px}
+    h2{font:700 26px Manrope;margin:8px 0}
+    .intro p{margin:0;color:var(--muted);font-size:13px}
+    .count{color:var(--muted);font-size:13px}
+    .layout{display:grid;grid-template-columns:240px 1fr;gap:24px}
+    aside{height:max-content;padding:20px;border:1px solid var(--line)}
+    aside h3{margin:0 0 18px;font:700 16px Manrope}
+    label{display:block;margin:0 0 7px;font-size:12px;font-weight:700}
+    .field{margin-bottom:16px}
+    .field input,.field select{width:100%;height:40px;padding:0 10px;border:1px solid var(--line);background:white}
+    .check{display:flex;align-items:center;gap:8px;margin:12px 0 18px;font-size:13px}
+    .check input{accent-color:var(--green)}
+    .primary{width:100%;height:44px;border:0;background:var(--green);color:white;font-weight:700;cursor:pointer}
+    .topresults{display:flex;justify-content:space-between;margin-bottom:14px}
+    .topresults select{height:38px;border:1px solid var(--line);padding:0 10px;background:#fff}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+    .card{border:1px solid var(--line);min-width:0}
+    .photo{height:190px;position:relative;background:var(--cream)}
+    .photo img{width:100%;height:100%;object-fit:cover}
+    .badge{position:absolute;top:10px;left:10px;padding:6px 9px;background:#fff;font-size:10px;font-weight:700}
+    .body{padding:15px}
+    .make{color:#a17b49;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase}
+    .card h3{font:700 16px Manrope;margin:6px 0 12px}
+    .specs{display:flex;flex-wrap:wrap;gap:10px;padding-bottom:12px;border-bottom:1px solid var(--line);color:var(--muted);font-size:11px}
+    .price-row{display:flex;justify-content:space-between;align-items:end;padding-top:12px}
+    .price{font:800 20px Manrope;color:var(--green)}
+    .price small{display:block;color:var(--muted);font:400 10px "DM Sans"}
+    .details{font-size:11px;font-weight:700;color:var(--green)}
+    .empty{grid-column:1/-1;padding:40px;text-align:center;border:1px dashed var(--line);color:var(--muted)}
+    .trust{padding:30px 20px;background:var(--green);color:white}
+    .trust-inner{max-width:1160px;margin:auto;display:flex;justify-content:space-between;gap:20px}
+    .trust b{display:block}.trust span{color:#d6b477}
+    footer{padding:28px 20px;background:#102d29;color:#cad5d0;font-size:12px}
+    .footer-inner{max-width:1160px;margin:auto;display:flex;justify-content:space-between;gap:15px}
+    footer a{color:#e0bd81}
+    .mobile-filter{display:none}
+    @media(max-width:760px){
+      nav{gap:12px}nav a:not(:last-child){display:none}
+      .hero-inner{grid-template-columns:1fr}.hero img{height:190px}
+      .layout{grid-template-columns:1fr}.grid{gap:10px}
+      .photo{height:135px}.body{padding:11px}.card h3{font-size:14px}
+      .specs{font-size:9px;gap:7px}.price{font-size:16px}
+      .trust-inner,.footer-inner{flex-direction:column}
+    }
+  </style>
 </head>
 <body>
-<div class="topbar">Véhicules sélectionnés <span>✦</span> Conseils personnalisés <span>✦</span> Votre prochain départ commence ici</div>
+  <div class="top">Véhicules sélectionnés ✦ Conseils personnalisés ✦ Votre prochain départ commence ici</div>
 
-<header class="header">
-  <a class="brand" href="#"><span class="brandmark">P</span><span class="brandname">PÉGASE<small>AUTOMOBILE</small></span></a>
-  <nav class="nav">
-    <a href="#vehicules">Nos véhicules</a>
-    <a href="#engagements">Nos engagements</a>
-    <a href="#contact" class="contact">Nous contacter</a>
-  </nav>
-</header>
+  <header>
+    <a class="brand" href="#">PÉGASE<small>AUTOMOBILE</small></a>
+    <nav>
+      <a href="#vehicules">Nos véhicules</a>
+      <a href="#engagements">Nos engagements</a>
+      <a href="#contact">Nous contacter</a>
+    </nav>
+  </header>
 
-<section class="hero">
-  <div class="hero-inner">
-    <div>
-      <div class="eyebrow">La sélection Pégase</div>
-      <h1>La bonne voiture.<br>Le bon départ.</h1>
-      <p>Découvrez des véhicules d’occasion choisis avec soin, préparés et accompagnés par une équipe à votre écoute.</p>
-    </div>
-    <div class="hero-art">
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="eyebrow">La sélection Pégase</div>
+        <h1>La bonne voiture.<br>Le bon départ.</h1>
+        <p>Découvrez des véhicules d’occasion choisis avec soin, préparés et accompagnés par une équipe à votre écoute.</p>
+      </div>
       <img src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=1100&q=85" alt="Berline élégante">
-      <div class="hero-note"><b>Chaque trajet compte</b>Une sélection pensée pour vous</div>
     </div>
-  </div>
-</section>
+  </section>
 
-<main class="container" id="vehicules">
-  <div class="intro-row">
-    <div>
-      <div class="eyebrow">Stock disponible</div>
-      <h2>Trouvez votre prochaine voiture</h2>
-      <p>Des modèles sélectionnés pour prendre la route en toute sérénité.</p>
+  <main id="vehicules">
+    <div class="intro">
+      <div>
+        <div class="eyebrow">Stock disponible</div>
+        <h2>Trouvez votre prochaine voiture</h2>
+        <p>Des modèles sélectionnés pour prendre la route en toute sérénité.</p>
+      </div>
+      <div class="count" id="count">Chargement…</div>
     </div>
-    <div class="count" id="count">Chargement…</div>
-  </div>
 
-  <button class="mobile-filter" id="mobileFilter"><span>☷ &nbsp; Affiner ma recherche</span><span>＋</span></button>
+    <button class="mobile-filter" id="mobileFilter">Afficher / masquer les filtres</button>
 
-  <div class="layout">
-    <aside class="filters" id="filters">
-      <div class="filter-title">Filtres <button class="reset" id="reset">Tout effacer</button></div>
-      <div class="field">
-        <label for="search">Marque ou modèle</label>
-        <input id="search" placeholder="Ex. Mercedes, 3008…">
-      </div>
-      <div class="field">
-        <label for="brand">Marque</label>
-        <select id="brand">
-          <option value="">Toutes les marques</option>
-          <option>Mercedes-Benz</option><option>BMW</option><option>Audi</option><option>Peugeot</option><option>Volkswagen</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="fuel">Énergie</label>
-        <select id="fuel">
-          <option value="">Toutes les énergies</option>
-          <option>Diesel</option><option>Essence</option><option>Hybride</option><option>Électrique</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="budget">Budget maximum</label>
-        <select id="budget">
-          <option value="">Tous les budgets</option>
-          <option value="20000">20 000 €</option><option value="30000">30 000 €</option><option value="40000">40 000 €</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="year">Année minimum</label>
-        <select id="year">
-          <option value="">Toutes les années</option>
-          <option value="2023">2023</option><option value="2022">2022</option><option value="2021">2021</option><option value="2020">2020</option>
-        </select>
-      </div>
-      <label class="checkrow"><input id="warranty" type="checkbox"> Garantie incluse</label>
-      <button class="apply" id="apply">Afficher les véhicules</button>
-    </aside>
+    <div class="layout">
+      <aside id="filters">
+        <h3>Filtres</h3>
+        <div class="field">
+          <label for="search">Marque ou modèle</label>
+          <input id="search" placeholder="Ex. Mercedes, 3008…">
+        </div>
+        <div class="field">
+          <label for="brand">Marque</label>
+          <select id="brand">
+            <option value="">Toutes les marques</option>
+            <option>Mercedes-Benz</option><option>BMW</option><option>Audi</option>
+            <option>Peugeot</option><option>Volkswagen</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="fuel">Énergie</label>
+          <select id="fuel">
+            <option value="">Toutes les énergies</option>
+            <option>Diesel</option><option>Essence</option><option>Hybride</option><option>Électrique</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="budget">Budget maximum</label>
+          <select id="budget">
+            <option value="">Tous les budgets</option>
+            <option value="20000">20 000 €</option><option value="30000">30 000 €</option><option value="40000">40 000 €</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="year">Année minimum</label>
+          <select id="year">
+            <option value="">Toutes les années</option>
+            <option value="2023">2023</option><option value="2022">2022</option>
+            <option value="2021">2021</option><option value="2020">2020</option>
+          </select>
+        </div>
+        <label class="check"><input id="warranty" type="checkbox"> Garantie incluse</label>
+        <button class="primary" id="reset">Effacer les filtres</button>
+      </aside>
 
-    <section>
-      <div class="results-top">
-        <div class="chips"><span class="chip">Véhicules contrôlés</span><span class="chip">Garantie incluse</span></div>
-        <select class="sort" id="sort" aria-label="Trier les véhicules">
-          <option value="recommended">Trier : recommandés</option>
-          <option value="price-asc">Prix croissant</option>
-          <option value="price-desc">Prix décroissant</option>
-          <option value="year-desc">Année récente</option>
-        </select>
-      </div>
-      <div class="grid" id="grid"></div>
-    </section>
-  </div>
-</main>
+      <section>
+        <div class="topresults">
+          <span>Véhicules disponibles</span>
+          <select id="sort" aria-label="Trier les véhicules">
+            <option value="recommended">Recommandés</option>
+            <option value="price-asc">Prix croissant</option>
+            <option value="price-desc">Prix décroissant</option>
+            <option value="year-desc">Année récente</option>
+          </select>
+        </div>
+        <div class="grid" id="grid"></div>
+      </section>
+    </div>
+  </main>
 
-<section class="trust" id="engagements">
-  <div class="trust-inner">
-    <div class="trust-item"><span class="trust-icon">✦</span><div><b>Une sélection exigeante</b><small>Chaque véhicule est choisi et contrôlé avec soin.</small></div></div>
-    <div class="trust-item"><span class="trust-icon">◷</span><div><b>Un accompagnement humain</b><small>Nous prenons le temps de trouver la bonne solution.</small></div></div>
-    <div class="trust-item"><span class="trust-icon">✓</span><div><b>La tranquillité d’esprit</b><small>Des véhicules préparés et garantis.</small></div></div>
-  </div>
-</section>
+  <section class="trust" id="engagements">
+    <div class="trust-inner">
+      <div><span>✦</span> <b>Une sélection exigeante</b>Chaque véhicule est choisi avec soin.</div>
+      <div><span>◷</span> <b>Un accompagnement humain</b>Nous vous aidons à choisir.</div>
+      <div><span>✓</span> <b>La tranquillité d’esprit</b>Des véhicules préparés et garantis.</div>
+    </div>
+  </section>
 
-<footer class="footer" id="contact">
-  <div class="footer-inner">
-    <div><strong>PÉGASE AUTOMOBILE</strong><div style="margin-top:6px">Votre prochain départ commence ici.</div></div>
-    <div>Une question ? <a href="mailto:contact@pegase-automobile.fr">Écrivez-nous</a> · <a href="tel:+33100000000">Appelez-nous</a></div>
-    <div>© <span id="yearNow"></span> Pégase Automobile</div>
-  </div>
-</footer>
+  <footer id="contact">
+    <div class="footer-inner">
+      <strong>PÉGASE AUTOMOBILE</strong>
+      <span>Une question ? <a href="mailto:contact@pegase-automobile.fr">Écrivez-nous</a></span>
+      <span>© <span id="year"></span> Pégase Automobile</span>
+    </div>
+  </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const SUPABASE_URL = "https://VOTRE-PROJET.supabase.co";
-  const SUPABASE_PUBLISHABLE_KEY = "VOTRE_CLE_PUBLISHABLE";
-  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://noeserogaxzyftigpmxe.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_zS2l3CEjG1nU7uEvSGtqYA_yv4bmkQU";
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
-  let cars = [];
-  const grid = document.querySelector("#grid");
-  const euro = value => new Intl.NumberFormat("fr-FR").format(value) + " €";
-  const km = value => new Intl.NumberFormat("fr-FR").format(value) + " km";
+    let cars = [];
+    const grid = document.querySelector("#grid");
 
-  async function loadCars() {
-    const { data, error } = await supabaseClient
-      .from("cars")
-      .select("id, brand, model, year, km, fuel, gear, price, warranty, badge, image_url")
-      .eq("published", true)
-      .order("created_at", { ascending: false });
+    async function loadCars() {
+      const { data, error } = await supabaseClient
+        .from("cars")
+        .select("id,brand,model,year,km,fuel,gear,price,warranty,badge,image_url")
+        .eq("published", true)
+        .order("created_at", { ascending: false });
 
-    if (error) {
-      document.querySelector("#count").textContent = "Chargement impossible";
-      grid.innerHTML = '<div class="no-results">Impossible de charger les annonces. Vérifiez les réglages Supabase.</div>';
-      return;
-    }
-    cars = data || [];
-    render();
-  }
+      if (error) {
+        document.querySelector("#count").textContent = "Erreur de chargement";
+        grid.innerHTML = '<div class="empty">Impossible de charger les véhicules. Vérifiez les réglages Supabase.</div>';
+        return;
+      }
 
-  function render() {
-    const search = document.querySelector("#search").value.trim().toLowerCase();
-    const brand = document.querySelector("#brand").value;
-    const fuel = document.querySelector("#fuel").value;
-    const budget = Number(document.querySelector("#budget").value) || Infinity;
-    const year = Number(document.querySelector("#year").value) || 0;
-    const warranty = document.querySelector("#warranty").checked;
-    const sort = document.querySelector("#sort").value;
-
-    let list = cars.filter(car =>
-      (!search || (car.brand + " " + car.model).toLowerCase().includes(search)) &&
-      (!brand || car.brand === brand) &&
-      (!fuel || car.fuel === fuel) &&
-      car.price <= budget &&
-      car.year >= year &&
-      (!warranty || car.warranty)
-    );
-
-    if (sort === "price-asc") list.sort((a, b) => a.price - b.price);
-    if (sort === "price-desc") list.sort((a, b) => b.price - a.price);
-    if (sort === "year-desc") list.sort((a, b) => b.year - a.year);
-
-    document.querySelector("#count").textContent =
-      list.length + " véhicule" + (list.length > 1 ? "s" : "");
-
-    if (!list.length) {
-      grid.innerHTML = '<div class="no-results">Aucun véhicule ne correspond à votre recherche.<br>Essayez d’élargir vos critères.</div>';
-      return;
+      cars = data || [];
+      renderCars();
     }
 
-    grid.innerHTML = list.map(car => `
-      <article class="card">
-        <div class="photo">
-          <img loading="lazy" src="${car.image_url}" alt="${car.brand} ${car.model}">
-          <span class="badge">${car.badge || "Disponible"}</span>
-          <button class="heart" aria-label="Ajouter aux favoris">♡</button>
-        </div>
-        <div class="cardbody">
-          <div class="make">${car.brand}</div>
-          <h3>${car.model}</h3>
-          <div class="specs">
-            <span>${car.year}</span><span>${km(car.km)}</span><span>${car.fuel}</span><span>${car.gear}</span>
-          </div>
-          <div class="price-row">
-            <div class="price">${euro(car.price)}<small>Prix clé en main</small></div>
-            <a class="details" href="mailto:contact@pegase-automobile.fr?subject=${encodeURIComponent("Informations — " + car.brand + " " + car.model)}">Découvrir →</a>
-          </div>
-        </div>
-      </article>
-    `).join("");
+    function renderCars() {
+      const search = document.querySelector("#search").value.trim().toLowerCase();
+      const brand = document.querySelector("#brand").value;
+      const fuel = document.querySelector("#fuel").value;
+      const budget = Number(document.querySelector("#budget").value) || Infinity;
+      const year = Number(document.querySelector("#year").value) || 0;
+      const warranty = document.querySelector("#warranty").checked;
+      const sort = document.querySelector("#sort").value;
 
-    document.querySelectorAll(".heart").forEach(button => {
-      button.addEventListener("click", () => {
-        button.classList.toggle("saved");
-        button.textContent = button.classList.contains("saved") ? "♥" : "♡";
+      let results = cars.filter(car =>
+        (!search || (car.brand + " " + car.model).toLowerCase().includes(search)) &&
+        (!brand || car.brand === brand) &&
+        (!fuel || car.fuel === fuel) &&
+        car.price <= budget &&
+        car.year >= year &&
+        (!warranty || car.warranty)
+      );
+
+      if (sort === "price-asc") results.sort((a, b) => a.price - b.price);
+      if (sort === "price-desc") results.sort((a, b) => b.price - a.price);
+      if (sort === "year-desc") results.sort((a, b) => b.year - a.year);
+
+      document.querySelector("#count").textContent =
+        results.length + " véhicule" + (results.length > 1 ? "s" : "");
+
+      if (!results.length) {
+        grid.innerHTML = '<div class="empty">Aucun véhicule ne correspond à votre recherche.</div>';
+        return;
+      }
+
+      grid.innerHTML = results.map(car => `
+        <article class="card">
+          <div class="photo">
+            <img src="${car.image_url}" alt="${car.brand} ${car.model}" loading="lazy">
+            <span class="badge">${car.badge || "Disponible"}</span>
+          </div>
+          <div class="body">
+            <div class="make">${car.brand}</div>
+            <h3>${car.model}</h3>
+            <div class="specs">
+              <span>${car.year}</span>
+              <span>${new Intl.NumberFormat("fr-FR").format(car.km)} km</span>
+              <span>${car.fuel}</span>
+              <span>${car.gear}</span>
+            </div>
+            <div class="price-row">
+              <div class="price">
+                ${new Intl.NumberFormat("fr-FR").format(car.price)} €
+                <small>Prix clé en main</small>
+              </div>
+              <a class="details" href="mailto:contact@pegase-automobile.fr?subject=${encodeURIComponent("Informations — " + car.brand + " " + car.model)}">Contacter →</a>
+            </div>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    ["search","brand","fuel","budget","year","warranty","sort"].forEach(id => {
+      document.querySelector("#" + id).addEventListener(
+        id === "search" ? "input" : "change",
+        renderCars
+      );
+    });
+
+    document.querySelector("#reset").addEventListener("click", () => {
+      ["search","brand","fuel","budget","year"].forEach(id => {
+        document.querySelector("#" + id).value = "";
       });
+      document.querySelector("#warranty").checked = false;
+      renderCars();
     });
-  }
 
-  ["search", "brand", "fuel", "budget", "year", "warranty", "sort"].forEach(id => {
-    document.getElementById(id).addEventListener(id === "search" ? "input" : "change", render);
-  });
-
-  document.querySelector("#apply").addEventListener("click", () => {
-    render();
-    if (innerWidth <= 650) document.querySelector("#filters").classList.remove("open");
-  });
-
-  document.querySelector("#reset").addEventListener("click", () => {
-    ["search", "brand", "fuel", "budget", "year"].forEach(id => {
-      document.getElementById(id).value = "";
+    document.querySelector("#mobileFilter").addEventListener("click", () => {
+      document.querySelector("#filters").hidden = !document.querySelector("#filters").hidden;
     });
-    document.querySelector("#warranty").checked = false;
-    render();
-  });
 
-  document.querySelector("#mobileFilter").addEventListener("click", () => {
-    document.querySelector("#filters").classList.toggle("open");
-  });
-
-  document.querySelector("#yearNow").textContent = new Date().getFullYear();
-  loadCars();
-</script>
+    document.querySelector("#year").textContent = new Date().getFullYear();
+    loadCars();
+  </script>
 </body>
 </html>
