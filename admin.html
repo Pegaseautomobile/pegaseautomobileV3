@@ -4,48 +4,58 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Administration | Pégase Automobile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root{--green:#173b37;--ink:#15232a;--muted:#718087;--line:#e6e8e4;--cream:#f6f5f1}
-    *{box-sizing:border-box}
-    body{margin:0;background:var(--cream);color:var(--ink);font-family:Arial,sans-serif}
-    header{padding:18px 24px;background:var(--green);color:white;display:flex;justify-content:space-between}
-    header a{color:#e6c992}
-    main{max-width:900px;margin:35px auto;padding:0 18px 50px}
-    h1{font-size:28px}
-    h2{font-size:19px}
-    .panel{background:white;border:1px solid var(--line);padding:24px;margin-bottom:20px}
-    label{display:block;margin:0 0 6px;font-size:13px;font-weight:bold}
-    input,select{width:100%;height:42px;padding:0 10px;margin:0 0 15px;border:1px solid var(--line);background:white}
-    input[type=file]{height:auto;padding:10px}
-    .formgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
-    button{min-height:42px;padding:0 16px;border:0;background:var(--green);color:white;font-weight:bold;cursor:pointer}
-    button.secondary{background:#eee;color:#6e463c}
-    .hidden{display:none!important}
-    .message{margin-top:12px;color:var(--green);font-size:13px}
-    .error{color:#a33636}
-    .note{color:var(--muted);font-size:12px;line-height:1.6}
-    .carrow{display:grid;grid-template-columns:76px 1fr auto;align-items:center;gap:14px;padding:12px 0;border-top:1px solid var(--line)}
-    .carrow img{width:76px;height:56px;object-fit:cover}
-    .carrow small{display:block;margin-top:4px;color:var(--muted)}
-    @media(max-width:600px){.formgrid{grid-template-columns:1fr}.panel{padding:18px}.carrow{grid-template-columns:55px 1fr auto}.carrow img{width:55px;height:50px}}
+    :root { --green:#173b37; --gold:#c99a55; --ink:#15232a; --muted:#718087; --line:#e6e8e4; --cream:#f6f5f1; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--cream); color:var(--ink); font-family:"DM Sans",sans-serif; }
+    header { padding:18px 24px; background:var(--green); color:white; display:flex; justify-content:space-between; align-items:center; }
+    header strong { font:800 15px Manrope,sans-serif; letter-spacing:.12em; }
+    header a { color:#e6c992; font-size:13px; }
+    main { max-width:900px; margin:36px auto; padding:0 18px 50px; }
+    h1 { font:700 28px Manrope,sans-serif; margin:0 0 7px; }
+    .lead { color:var(--muted); margin:0 0 24px; }
+    .panel { background:white; border:1px solid var(--line); padding:24px; margin-bottom:20px; }
+    h2 { margin:0 0 18px; font:700 18px Manrope,sans-serif; }
+    label { display:block; margin:0 0 6px; font-size:12px; font-weight:700; }
+    input,select { width:100%; height:42px; padding:0 11px; margin:0 0 15px; border:1px solid var(--line); border-radius:2px; background:white; color:var(--ink); }
+    input[type="file"] { height:auto; padding:10px; }
+    .formgrid { display:grid; grid-template-columns:1fr 1fr; gap:0 14px; }
+    button { min-height:43px; padding:0 16px; border:0; background:var(--green); color:white; font-weight:700; cursor:pointer; }
+    button:hover { background:#24574e; }
+    button.secondary { min-height:34px; background:#f1eeea; color:#6e463c; font-size:12px; }
+    .message { min-height:20px; margin-top:12px; font-size:13px; color:var(--green); }
+    .message.error { color:#a33636; }
+    .hidden { display:none!important; }
+    .carrow { display:grid; grid-template-columns:76px 1fr auto; align-items:center; gap:14px; padding:12px 0; border-top:1px solid var(--line); }
+    .carrow img { width:76px; height:56px; object-fit:cover; background:var(--cream); }
+    .carrow strong { display:block; font-size:13px; }
+    .carrow small { color:var(--muted); }
+    .note { font-size:12px; line-height:1.6; color:var(--muted); }
+    @media(max-width:600px) { main{margin-top:24px}.panel{padding:18px}.formgrid{grid-template-columns:1fr}.carrow{grid-template-columns:60px 1fr auto}.carrow img{width:60px;height:50px} }
   </style>
 </head>
 <body>
   <header>
     <strong>PÉGASE AUTOMOBILE · ADMIN</strong>
-    <a href="index.html">Voir le site</a>
+    <a href="index.html">Voir le site ↗</a>
   </header>
 
   <main>
     <h1>Gestion des véhicules</h1>
-    <p>Connectez-vous pour ajouter une voiture et sa photo au catalogue.</p>
+    <p class="lead">Connectez-vous pour ajouter une voiture et sa photo au catalogue.</p>
 
     <section class="panel" id="loginPanel">
       <h2>Connexion administrateur</h2>
-      <label for="accessCode">Code d’accès</label>
-      <input id="accessCode" type="password" placeholder="Entrez votre code">
+      <label for="adminEmail">Adresse e-mail de votre compte Supabase</label>
+      <input id="adminEmail" type="email" autocomplete="username" placeholder="votre adresse e-mail" required>
+      <label for="accessCode">Mot de passe Supabase</label>
+      <input id="accessCode" type="password" autocomplete="current-password" placeholder="Entrez votre mot de passe" required>
       <button id="loginButton">Se connecter</button>
       <div class="message" id="loginMessage"></div>
+      <p class="note">Utilisez l’adresse e-mail et le mot de passe du compte créé dans Supabase, dans Authentification → Utilisateurs.</p>
     </section>
 
     <div id="adminArea" class="hidden">
@@ -54,27 +64,17 @@
         <form id="carForm">
           <div class="formgrid">
             <div><label for="brand">Marque</label><input id="brand" required placeholder="Mercedes-Benz"></div>
-            <div><label for="model">Modèle</label><input id="model" required placeholder="Classe C 220 d"></div>
-            <div><label for="year">Année</label><input id="year" type="number" min="1950" max="2100" required></div>
-            <div><label for="km">Kilométrage</label><input id="km" type="number" min="0" required></div>
-            <div>
-              <label for="fuel">Énergie</label>
-              <select id="fuel" required>
-                <option value="">Choisir</option><option>Diesel</option><option>Essence</option><option>Hybride</option><option>Électrique</option>
-              </select>
-            </div>
-            <div>
-              <label for="gear">Boîte de vitesse</label>
-              <select id="gear" required>
-                <option value="">Choisir</option><option>Automatique</option><option>Manuelle</option>
-              </select>
-            </div>
-            <div><label for="price">Prix (€)</label><input id="price" type="number" min="0" required></div>
-            <div><label for="badge">Badge</label><input id="badge" placeholder="Garantie incluse"></div>
+            <div><label for="model">Modèle / finition</label><input id="model" required placeholder="Classe C 220 d AMG Line"></div>
+            <div><label for="year">Année</label><input id="year" type="number" min="1950" max="2100" required placeholder="2022"></div>
+            <div><label for="km">Kilométrage</label><input id="km" type="number" min="0" required placeholder="38400"></div>
+            <div><label for="fuel">Énergie</label><select id="fuel" required><option value="">Choisir</option><option>Diesel</option><option>Essence</option><option>Hybride</option><option>Électrique</option></select></div>
+            <div><label for="gear">Boîte de vitesse</label><select id="gear" required><option value="">Choisir</option><option>Automatique</option><option>Manuelle</option></select></div>
+            <div><label for="price">Prix (€)</label><input id="price" type="number" min="0" required placeholder="38990"></div>
+            <div><label for="badge">Petit badge (facultatif)</label><input id="badge" placeholder="Garantie incluse"></div>
           </div>
-          <label for="photo">Photo du véhicule</label>
+          <label for="photo">Photo principale</label>
           <input id="photo" type="file" accept="image/jpeg,image/png,image/webp" required>
-          <label><input id="warranty" type="checkbox"> Garantie incluse</label>
+          <label style="display:flex;align-items:center;gap:8px;margin:0 0 16px"><input id="warranty" type="checkbox" style="width:auto;height:auto;margin:0"> Garantie incluse</label>
           <button id="saveButton" type="submit">Ajouter au catalogue</button>
           <div class="message" id="formMessage"></div>
         </form>
@@ -84,6 +84,7 @@
         <h2>Véhicules en ligne</h2>
         <div id="carsList"></div>
       </section>
+
       <button class="secondary" id="logoutButton">Se déconnecter</button>
     </div>
   </main>
@@ -92,111 +93,82 @@
   <script>
     const SUPABASE_URL = "https://noeserogaxzyftigpmxe.supabase.co";
     const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_zS2l3CEjG1nU7uEvSGtqYA_yv4bmkQU";
-    const SUPABASE_ADMIN_EMAIL = "VOTRE_EMAIL_ADMIN";
     const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
     const loginPanel = document.querySelector("#loginPanel");
     const adminArea = document.querySelector("#adminArea");
     const loginMessage = document.querySelector("#loginMessage");
     const formMessage = document.querySelector("#formMessage");
+    const htmlSafe = value => String(value ?? "").replace(/[&<>"']/g, character => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[character]));
 
-    function message(element, text, error = false) {
-      element.textContent = text;
-      element.classList.toggle("error", error);
+    function showMessage(element, message, isError = false) {
+      element.textContent = message;
+      element.classList.toggle("error", isError);
     }
 
-    function showAdmin(session) {
+    function updateLoginState(session) {
       loginPanel.classList.toggle("hidden", Boolean(session));
       adminArea.classList.toggle("hidden", !session);
       if (session) loadCars();
     }
 
-    document.querySelector("#loginButton").addEventListener("click", async () => {
-      message(loginMessage, "Connexion en cours…");
-
+    document.querySelector("#loginButton").addEventListener("click", async event => {
+      event.preventDefault();
+      showMessage(loginMessage, "Connexion en cours…");
       const { data, error } = await db.auth.signInWithPassword({
-        email: SUPABASE_ADMIN_EMAIL,
+        email: document.querySelector("#adminEmail").value.trim(),
         password: document.querySelector("#accessCode").value
       });
-
-      if (error) {
-        message(loginMessage, "Connexion refusée. Vérifiez le code d’accès.", true);
-        return;
-      }
-
-      showAdmin(data.session);
+      if (error) return showMessage(loginMessage, "Connexion refusée. Vérifiez l’adresse e-mail et le mot de passe de votre compte Supabase.", true);
+      showMessage(loginMessage, "Connexion réussie.");
+      updateLoginState(data.session);
     });
 
     document.querySelector("#logoutButton").addEventListener("click", async () => {
       await db.auth.signOut();
-      showAdmin(null);
+      updateLoginState(null);
     });
 
     async function loadCars() {
       const list = document.querySelector("#carsList");
       list.textContent = "Chargement…";
-
-      const { data, error } = await db.from("cars")
-        .select("id,brand,model,year,price,image_url")
-        .order("created_at", { ascending: false });
-
+      const { data, error } = await db.from("cars").select("id,brand,model,year,price,image_url").order("created_at", { ascending: false });
       if (error) {
-        list.textContent = "Impossible de charger les annonces. Vérifiez le SQL Supabase.";
+        list.textContent = "Impossible de charger les véhicules. Vérifiez le SQL et les réglages Supabase.";
         return;
       }
-
       if (!data.length) {
-        list.textContent = "Aucun véhicule pour le moment.";
+        list.innerHTML = '<p class="note">Aucun véhicule pour le moment. Utilisez le formulaire ci-dessus pour commencer.</p>';
         return;
       }
-
       list.innerHTML = data.map(car => `
         <div class="carrow">
-          <img src="${car.image_url}" alt="">
-          <div><strong>${car.brand} ${car.model}</strong>
-          <small>${car.year} · ${new Intl.NumberFormat("fr-FR").format(car.price)} €</small></div>
-          <button class="secondary" data-id="${car.id}">Supprimer</button>
+          <img src="${htmlSafe(car.image_url)}" alt="">
+          <div><strong>${htmlSafe(car.brand)} ${htmlSafe(car.model)}</strong><small>${htmlSafe(car.year)} · ${new Intl.NumberFormat("fr-FR").format(car.price)} €</small></div>
+          <button class="secondary" data-delete="${htmlSafe(car.id)}">Supprimer</button>
         </div>
       `).join("");
-
-      list.querySelectorAll("[data-id]").forEach(button => {
-        button.addEventListener("click", () => deleteCar(button.dataset.id));
-      });
+      list.querySelectorAll("[data-delete]").forEach(button => button.addEventListener("click", () => deleteCar(button.dataset.delete)));
     }
 
     document.querySelector("#carForm").addEventListener("submit", async event => {
       event.preventDefault();
-
       const button = document.querySelector("#saveButton");
       const file = document.querySelector("#photo").files[0];
-
-      if (!file) {
-        message(formMessage, "Choisissez une photo.", true);
-        return;
-      }
-      if (file.size > 5 * 1024 * 1024) {
-        message(formMessage, "La photo doit faire moins de 5 Mo.", true);
-        return;
-      }
-
+      if (!file) return showMessage(formMessage, "Choisissez une photo.", true);
+      if (file.size > 5 * 1024 * 1024) return showMessage(formMessage, "La photo doit faire moins de 5 Mo.", true);
       button.disabled = true;
-      message(formMessage, "Envoi de la photo et de l’annonce…");
+      showMessage(formMessage, "Envoi de la photo et de l’annonce…");
 
       const extension = file.name.split(".").pop().toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
       const imagePath = crypto.randomUUID() + "." + extension;
-
-      const { error: uploadError } = await db.storage.from("cars").upload(imagePath, file, {
-        contentType: file.type
-      });
-
+      const { error: uploadError } = await db.storage.from("cars").upload(imagePath, file, { contentType: file.type, upsert: false });
       if (uploadError) {
         button.disabled = false;
-        message(formMessage, "Erreur photo : " + uploadError.message, true);
-        return;
+        return showMessage(formMessage, "Photo non envoyée : " + uploadError.message, true);
       }
 
-      const { data: photo } = db.storage.from("cars").getPublicUrl(imagePath);
-
+      const { data: photoData } = db.storage.from("cars").getPublicUrl(imagePath);
       const car = {
         brand: document.querySelector("#brand").value.trim(),
         model: document.querySelector("#model").value.trim(),
@@ -207,45 +179,29 @@
         price: Number(document.querySelector("#price").value),
         warranty: document.querySelector("#warranty").checked,
         badge: document.querySelector("#badge").value.trim() || "Disponible",
-        image_url: photo.publicUrl,
+        image_url: photoData.publicUrl,
         image_path: imagePath,
         published: true
       };
-
       const { error } = await db.from("cars").insert(car);
       button.disabled = false;
-
-      if (error) {
-        message(formMessage, "Erreur annonce : " + error.message, true);
-        return;
-      }
-
+      if (error) return showMessage(formMessage, "Annonce non enregistrée : " + error.message, true);
       document.querySelector("#carForm").reset();
-      message(formMessage, "Annonce ajoutée !");
+      showMessage(formMessage, "Annonce ajoutée au catalogue !");
       loadCars();
     });
 
     async function deleteCar(id) {
-      if (!confirm("Supprimer cette annonce ?")) return;
-
-      const { data: car } = await db.from("cars")
-        .select("image_path").eq("id", id).single();
-
+      if (!confirm("Supprimer cette annonce du site ?")) return;
+      const { data: car } = await db.from("cars").select("image_path").eq("id", id).single();
       const { error } = await db.from("cars").delete().eq("id", id);
-      if (error) {
-        alert("Suppression impossible : " + error.message);
-        return;
-      }
-
-      if (car?.image_path) {
-        await db.storage.from("cars").remove([car.image_path]);
-      }
-
+      if (error) return alert("Suppression impossible : " + error.message);
+      if (car && car.image_path) await db.storage.from("cars").remove([car.image_path]);
       loadCars();
     }
 
-    db.auth.getSession().then(({ data }) => showAdmin(data.session));
-    db.auth.onAuthStateChange((_event, session) => showAdmin(session));
+    db.auth.getSession().then(({ data }) => updateLoginState(data.session));
+    db.auth.onAuthStateChange((_event, session) => updateLoginState(session));
   </script>
 </body>
 </html>
