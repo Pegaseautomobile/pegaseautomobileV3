@@ -33,8 +33,10 @@
     .carrow img { width:76px; height:56px; object-fit:cover; background:var(--cream); }
     .carrow strong { display:block; font-size:13px; }
     .carrow small { color:var(--muted); }
+    .row-actions { display:flex; align-items:center; justify-content:flex-end; gap:7px; }
+    .row-actions .secondary { padding:0 10px; white-space:nowrap; }
     .note { font-size:12px; line-height:1.6; color:var(--muted); }
-    @media(max-width:600px) { main{margin-top:24px}.panel{padding:18px}.formgrid{grid-template-columns:1fr}.carrow{grid-template-columns:60px 1fr auto}.carrow img{width:60px;height:50px} }
+    @media(max-width:600px) { main{margin-top:24px}.panel{padding:18px}.formgrid{grid-template-columns:1fr}.carrow{grid-template-columns:60px 1fr}.carrow img{width:60px;height:50px}.row-actions{grid-column:2;justify-content:flex-start;flex-wrap:wrap} }
   </style>
 </head>
 <body>
@@ -45,15 +47,31 @@
 
   <main>
     <h1>Gestion des véhicules</h1>
-    <p class="lead">Connectez-vous pour ajouter une voiture et sa photo au catalogue.</p>
+    <p class="lead">Connectez-vous pour ajouter une voiture et ses photos au catalogue.</p>
 
     <section class="panel" id="loginPanel">
       <h2>Connexion administrateur</h2>
       <label for="accessCode">Mot de passe</label>
       <input id="accessCode" type="password" autocomplete="current-password" placeholder="Entrez votre mot de passe" required>
-      <button id="loginButton" type="button">Se connecter</button>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <button id="loginButton" type="button">Se connecter</button>
+        <button id="forgotPasswordButton" class="secondary" type="button">Mot de passe oublié</button>
+      </div>
       <div class="message" id="loginMessage"></div>
-      <p class="note">Entre le code d’accès administrateur.</p>
+      <p class="note">Connexion sécurisée au compte administrateur Supabase.</p>
+    </section>
+
+    <section class="panel hidden" id="recoveryPanel">
+      <h2>Choisir un nouveau mot de passe</h2>
+      <p class="note">Saisis le nouveau mot de passe deux fois.</p>
+      <form id="recoveryForm">
+        <label for="newPassword">Nouveau mot de passe</label>
+        <input id="newPassword" type="password" autocomplete="new-password" minlength="6" required>
+        <label for="confirmPassword">Confirmer le mot de passe</label>
+        <input id="confirmPassword" type="password" autocomplete="new-password" minlength="6" required>
+        <button id="changePasswordButton" type="submit">Enregistrer le nouveau mot de passe</button>
+        <div class="message" id="recoveryMessage"></div>
+      </form>
     </section>
 
     <div id="adminArea" class="hidden">
@@ -70,8 +88,9 @@
             <div><label for="price">Prix (€)</label><input id="price" type="number" min="0" required placeholder="38990"></div>
             <div><label for="badge">Petit badge (facultatif)</label><input id="badge" placeholder="Garantie incluse"></div>
           </div>
-          <label for="photo">Photo principale</label>
-          <input id="photo" type="file" accept="image/jpeg,image/png,image/webp" required>
+          <label for="photo">Photos du véhicule (jusqu’à 10)</label>
+          <input id="photo" type="file" accept="image/jpeg,image/png,image/webp" multiple required>
+          <p class="note" style="margin:-8px 0 16px">Choisis plusieurs photos à la fois. La première sera la photo de couverture, les autres défileront dans l’annonce.</p>
           <label style="display:flex;align-items:center;gap:8px;margin:0 0 16px"><input id="warranty" type="checkbox" style="width:auto;height:auto;margin:0"> Garantie incluse</label>
           <button id="saveButton" type="submit">Ajouter au catalogue</button>
           <div class="message" id="formMessage"></div>
@@ -89,19 +108,19 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // Supabase sert uniquement à stocker les annonces et les photos.
     // La clé publishable est prévue pour le navigateur. N'utilisez jamais une clé secret/service_role ici.
     const SUPABASE_URL = "https://noeserogaxzyftigpmxe.supabase.co";
     const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_zS2l3CEjG1nU7uEvSGtqYA_yv4bmkQU";
-    // Le code est vérifié directement par cette page, sans Supabase Auth.
-    const ADMIN_ACCESS_CODE = "Pégase123";
-    const ADMIN_SESSION_KEY = "pegase-admin-open";
+    const SUPABASE_ADMIN_EMAIL = "younestalbia@outlook.fr";
     const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
     const loginPanel = document.querySelector("#loginPanel");
+    const recoveryPanel = document.querySelector("#recoveryPanel");
     const adminArea = document.querySelector("#adminArea");
     const loginMessage = document.querySelector("#loginMessage");
+    const recoveryMessage = document.querySelector("#recoveryMessage");
     const formMessage = document.querySelector("#formMessage");
+    let recoveryMode = false;
     const htmlSafe = value => String(value ?? "").replace(/[&<>"']/g, character => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[character]));
 
     function showMessage(element, message, isError = false) {
@@ -109,36 +128,78 @@
       element.classList.toggle("error", isError);
     }
 
-    function updateLoginState(isUnlocked) {
-      loginPanel.classList.toggle("hidden", isUnlocked);
-      adminArea.classList.toggle("hidden", !isUnlocked);
-      if (isUnlocked) loadCars();
+    function updateLoginState(session) {
+      if (recoveryMode) return;
+      loginPanel.classList.toggle("hidden", Boolean(session));
+      adminArea.classList.toggle("hidden", !session);
+      if (session) loadCars();
     }
 
-    document.querySelector("#loginButton").addEventListener("click", () => {
-      const enteredCode = document.querySelector("#accessCode").value;
-      if (enteredCode !== ADMIN_ACCESS_CODE) {
-        return showMessage(loginMessage, "Code incorrect. Vérifie les majuscules et les accents.", true);
-      }
-      sessionStorage.setItem(ADMIN_SESSION_KEY, "true");
-      document.querySelector("#accessCode").value = "";
-      showMessage(loginMessage, "Code accepté.");
-      updateLoginState(true);
+    function showRecoveryForm() {
+      recoveryMode = true;
+      loginPanel.classList.add("hidden");
+      adminArea.classList.add("hidden");
+      recoveryPanel.classList.remove("hidden");
+    }
+
+    document.querySelector("#loginButton").addEventListener("click", async () => {
+      showMessage(loginMessage, "Connexion en cours…");
+      const { data, error } = await db.auth.signInWithPassword({
+        email: SUPABASE_ADMIN_EMAIL,
+        password: document.querySelector("#accessCode").value
+      });
+      if (error) return showMessage(loginMessage, "Connexion refusée. Vérifie le mot de passe du compte administrateur.", true);
+      showMessage(loginMessage, "Connexion réussie.");
+      updateLoginState(data.session);
     });
 
     document.querySelector("#accessCode").addEventListener("keydown", event => {
       if (event.key === "Enter") document.querySelector("#loginButton").click();
     });
 
-    document.querySelector("#logoutButton").addEventListener("click", () => {
-      sessionStorage.removeItem(ADMIN_SESSION_KEY);
-      updateLoginState(false);
+    document.querySelector("#forgotPasswordButton").addEventListener("click", async () => {
+      if (window.location.protocol === "file:") {
+        return showMessage(loginMessage, "Cette page doit être ouverte depuis ton adresse GitHub Pages, pas depuis un fichier local.", true);
+      }
+      showMessage(loginMessage, "Envoi du lien de récupération…");
+      const redirectTo = window.location.origin + window.location.pathname;
+      const { error } = await db.auth.resetPasswordForEmail(SUPABASE_ADMIN_EMAIL, { redirectTo });
+      if (error) return showMessage(loginMessage, "Envoi impossible : " + error.message, true);
+      showMessage(loginMessage, "Lien envoyé. Ouvre le nouveau mail pour choisir un mot de passe.");
+    });
+
+    document.querySelector("#recoveryForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      const password = document.querySelector("#newPassword").value;
+      const confirmation = document.querySelector("#confirmPassword").value;
+      if (password !== confirmation) return showMessage(recoveryMessage, "Les deux mots de passe ne correspondent pas.", true);
+      if (password.length < 6) return showMessage(recoveryMessage, "Le mot de passe doit contenir au moins 6 caractères.", true);
+
+      const button = document.querySelector("#changePasswordButton");
+      button.disabled = true;
+      showMessage(recoveryMessage, "Enregistrement du nouveau mot de passe…");
+      const { error } = await db.auth.updateUser({ password });
+      button.disabled = false;
+      if (error) return showMessage(recoveryMessage, "Modification impossible : " + error.message, true);
+
+      recoveryMode = false;
+      await db.auth.signOut();
+      recoveryPanel.classList.add("hidden");
+      loginPanel.classList.remove("hidden");
+      document.querySelector("#recoveryForm").reset();
+      showMessage(loginMessage, "Mot de passe modifié. Connecte-toi avec le nouveau mot de passe.");
+      window.history.replaceState({}, document.title, window.location.pathname);
+    });
+
+    document.querySelector("#logoutButton").addEventListener("click", async () => {
+      await db.auth.signOut();
+      updateLoginState(null);
     });
 
     async function loadCars() {
       const list = document.querySelector("#carsList");
       list.textContent = "Chargement…";
-      const { data, error } = await db.from("cars").select("id,brand,model,year,price,image_url").order("created_at", { ascending: false });
+      const { data, error } = await db.from("cars").select("id,brand,model,year,price,image_url,images").order("created_at", { ascending: false });
       if (error) {
         list.textContent = "Impossible de charger les véhicules. Vérifiez le SQL et les réglages Supabase.";
         return;
@@ -150,31 +211,82 @@
       list.innerHTML = data.map(car => `
         <div class="carrow">
           <img src="${htmlSafe(car.image_url)}" alt="">
-          <div><strong>${htmlSafe(car.brand)} ${htmlSafe(car.model)}</strong><small>${htmlSafe(car.year)} · ${new Intl.NumberFormat("fr-FR").format(car.price)} €</small></div>
-          <button class="secondary" data-delete="${htmlSafe(car.id)}">Supprimer</button>
+          <div><strong>${htmlSafe(car.brand)} ${htmlSafe(car.model)}</strong><small>${htmlSafe(car.year)} · ${new Intl.NumberFormat("fr-FR").format(car.price)} € · ${Array.isArray(car.images) && car.images.length ? car.images.length : 1} photo(s)</small></div>
+          <div class="row-actions">
+            <input type="file" accept="image/jpeg,image/png,image/webp" multiple data-photos-for="${htmlSafe(car.id)}" hidden>
+            <button class="secondary" data-add-photos="${htmlSafe(car.id)}">Ajouter photos</button>
+            <button class="secondary" data-delete="${htmlSafe(car.id)}">Supprimer</button>
+          </div>
         </div>
       `).join("");
       list.querySelectorAll("[data-delete]").forEach(button => button.addEventListener("click", () => deleteCar(button.dataset.delete)));
+      list.querySelectorAll("[data-add-photos]").forEach(button => {
+        const id = button.dataset.addPhotos;
+        const input = list.querySelector(`[data-photos-for="${id}"]`);
+        button.addEventListener("click", () => input.click());
+        input.addEventListener("change", async () => {
+          const files = Array.from(input.files);
+          input.value = "";
+          if (files.length) await addPhotos(id, files);
+        });
+      });
+    }
+
+    async function addPhotos(id, files) {
+      if (files.length > 10) return alert("Choisissez 10 photos maximum à la fois.");
+      if (files.some(file => file.size > 5 * 1024 * 1024)) return alert("Chaque photo doit faire moins de 5 Mo.");
+      const { data: car, error: readError } = await db.from("cars").select("images,image_url,image_path").eq("id", id).single();
+      if (readError) return alert("Impossible de lire cette annonce : " + readError.message);
+      const currentPhotos = Array.isArray(car.images) && car.images.length
+        ? car.images
+        : [{ url: car.image_url, path: car.image_path }].filter(photo => photo.url);
+      if (currentPhotos.length + files.length > 10) return alert("Cette annonce peut contenir 10 photos maximum.");
+
+      const uploadedPhotos = [];
+      for (const file of files) {
+        const extension = file.name.split(".").pop().toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
+        const path = crypto.randomUUID() + "." + extension;
+        const { error: uploadError } = await db.storage.from("cars").upload(path, file, { contentType: file.type, upsert: false });
+        if (uploadError) {
+          if (uploadedPhotos.length) await db.storage.from("cars").remove(uploadedPhotos.map(photo => photo.path));
+          return alert("Photo non envoyée : " + uploadError.message);
+        }
+        const { data: photoData } = db.storage.from("cars").getPublicUrl(path);
+        uploadedPhotos.push({ url: photoData.publicUrl, path });
+      }
+
+      const { error: updateError } = await db.from("cars").update({ images: [...currentPhotos, ...uploadedPhotos] }).eq("id", id);
+      if (updateError) {
+        await db.storage.from("cars").remove(uploadedPhotos.map(photo => photo.path));
+        return alert("Photos non ajoutées : " + updateError.message);
+      }
+      loadCars();
     }
 
     document.querySelector("#carForm").addEventListener("submit", async event => {
       event.preventDefault();
       const button = document.querySelector("#saveButton");
-      const file = document.querySelector("#photo").files[0];
-      if (!file) return showMessage(formMessage, "Choisissez une photo.", true);
-      if (file.size > 5 * 1024 * 1024) return showMessage(formMessage, "La photo doit faire moins de 5 Mo.", true);
+      const files = Array.from(document.querySelector("#photo").files);
+      if (!files.length) return showMessage(formMessage, "Choisissez au moins une photo.", true);
+      if (files.length > 10) return showMessage(formMessage, "Choisissez 10 photos maximum.", true);
+      if (files.some(file => file.size > 5 * 1024 * 1024)) return showMessage(formMessage, "Chaque photo doit faire moins de 5 Mo.", true);
       button.disabled = true;
-      showMessage(formMessage, "Envoi de la photo et de l’annonce…");
-
-      const extension = file.name.split(".").pop().toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
-      const imagePath = crypto.randomUUID() + "." + extension;
-      const { error: uploadError } = await db.storage.from("cars").upload(imagePath, file, { contentType: file.type, upsert: false });
-      if (uploadError) {
-        button.disabled = false;
-        return showMessage(formMessage, "Photo non envoyée : " + uploadError.message, true);
+      const uploadedPhotos = [];
+      for (let index = 0; index < files.length; index++) {
+        const file = files[index];
+        showMessage(formMessage, `Envoi de la photo ${index + 1} sur ${files.length}…`);
+        const extension = file.name.split(".").pop().toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
+        const path = crypto.randomUUID() + "." + extension;
+        const { error: uploadError } = await db.storage.from("cars").upload(path, file, { contentType: file.type, upsert: false });
+        if (uploadError) {
+          if (uploadedPhotos.length) await db.storage.from("cars").remove(uploadedPhotos.map(photo => photo.path));
+          button.disabled = false;
+          return showMessage(formMessage, "Photo non envoyée : " + uploadError.message, true);
+        }
+        const { data: photoData } = db.storage.from("cars").getPublicUrl(path);
+        uploadedPhotos.push({ url: photoData.publicUrl, path });
       }
 
-      const { data: photoData } = db.storage.from("cars").getPublicUrl(imagePath);
       const car = {
         brand: document.querySelector("#brand").value.trim(),
         model: document.querySelector("#model").value.trim(),
@@ -185,13 +297,17 @@
         price: Number(document.querySelector("#price").value),
         warranty: document.querySelector("#warranty").checked,
         badge: document.querySelector("#badge").value.trim() || "Disponible",
-        image_url: photoData.publicUrl,
-        image_path: imagePath,
+        image_url: uploadedPhotos[0].url,
+        image_path: uploadedPhotos[0].path,
+        images: uploadedPhotos,
         published: true
       };
       const { error } = await db.from("cars").insert(car);
       button.disabled = false;
-      if (error) return showMessage(formMessage, "Annonce non enregistrée : " + error.message, true);
+      if (error) {
+        await db.storage.from("cars").remove(uploadedPhotos.map(photo => photo.path));
+        return showMessage(formMessage, "Annonce non enregistrée : " + error.message, true);
+      }
       document.querySelector("#carForm").reset();
       showMessage(formMessage, "Annonce ajoutée au catalogue !");
       loadCars();
@@ -199,14 +315,31 @@
 
     async function deleteCar(id) {
       if (!confirm("Supprimer cette annonce du site ?")) return;
-      const { data: car } = await db.from("cars").select("image_path").eq("id", id).single();
+      const { data: car } = await db.from("cars").select("image_path,images").eq("id", id).single();
       const { error } = await db.from("cars").delete().eq("id", id);
       if (error) return alert("Suppression impossible : " + error.message);
-      if (car && car.image_path) await db.storage.from("cars").remove([car.image_path]);
+      if (car) {
+        const paths = Array.isArray(car.images) ? car.images.map(photo => photo.path).filter(Boolean) : [];
+        if (car.image_path) paths.push(car.image_path);
+        if (paths.length) await db.storage.from("cars").remove([...new Set(paths)]);
+      }
       loadCars();
     }
 
-    updateLoginState(sessionStorage.getItem(ADMIN_SESSION_KEY) === "true");
+    db.auth.getSession().then(({ data }) => {
+      const params = new URLSearchParams(window.location.search);
+      const isRecoveryLink = params.get("type") === "recovery" || window.location.hash.includes("type=recovery");
+      if (isRecoveryLink) showRecoveryForm();
+      else updateLoginState(data.session);
+    });
+
+    db.auth.onAuthStateChange((event, session) => {
+      if (event === "PASSWORD_RECOVERY") {
+        showRecoveryForm();
+        return;
+      }
+      updateLoginState(session);
+    });
   </script>
 </body>
 </html>
